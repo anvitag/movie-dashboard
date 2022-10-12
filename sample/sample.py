@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from awesome_table import AwesomeTable
+
 
 st.set_page_config(layout="wide")
 st.title('Streaming services')
