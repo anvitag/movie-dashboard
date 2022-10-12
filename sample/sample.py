@@ -5,7 +5,7 @@ import numpy as np
 
 st.set_page_config(layout="wide")
 st.title('Streaming services')
-
+st.image('resources/streaming2.jpg', use_column_width=True)
 
 def read_data():
     content = pd.read_csv('sample/all_data.csv')
