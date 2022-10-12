@@ -8,7 +8,7 @@ st.title('Streaming services')
 
 
 def read_data():
-    content = pd.read_csv('all_data.csv')
+    content = pd.read_csv('sample/all_data.csv')
 
     # data cleaning
     content = content[['title', 'type','platform','averageRating', 'numVotes','description', 'year', 'release_year',
