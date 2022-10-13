@@ -4,8 +4,10 @@ import numpy as np
 
 
 st.set_page_config(layout="wide")
-st.title('Streaming services')
-st.image('resources/streaming2.jpg', use_column_width=True)
+st.markdown("<h1 style='text-align: center; color: #e4e8f3; font-size:55px '>STREAMING WARS : INDIA </h1>", unsafe_allow_html=True)
+st.markdown("<p><p>", unsafe_allow_html=True)
+d1,d2,d3 = st.columns((1,4,1))
+d2.image('resources/streaming2.jpg', use_column_width=True, clamp=True)
 
 def read_data():
     content = pd.read_csv('sample/all_data.csv')
@@ -93,7 +95,10 @@ def form_setup():
     genres= content.genre.str.split(",").explode('genre').value_counts().index.tolist()
     genres.insert(0, 'All')
     sel_genre = c1.selectbox('Select genre', (genres),  key='genre-radio')
-    state = form.form_submit_button("Filter")
+    c4, c5,c6 = form.columns((2,2,1))
+    state = c5.form_submit_button("Filter")
+    search = st.text_input("Search Titles", "")
+
     fil1 = content
     if state:
         
@@ -104,9 +109,14 @@ def form_setup():
             fil1 = fil1[fil1.platform==plat]
 
         if sel_genre!='All':
-            fil1 = fil1[fil1.genre.str.contains(sel_genre)]
-        
+            fil1 = fil1[fil1.genre.str.contains(sel_genre, case=False)]
+
+    if search:
+        fil1 = content[content.Title.str.contains(search, case=False)]  
     st.dataframe(sort_popular(fil1))
+
+    
+
 
 form_setup()
 #AwesomeTable(sorted)
