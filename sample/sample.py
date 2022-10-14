@@ -115,9 +115,14 @@ def form_setup():
         fil1 = content[content.Title.str.contains(search, case=False)]  
     st.dataframe(sort_popular(fil1))
 
+def watchlist():
+    wtbtn = st.button("Create a watchlist!")
     
-
+    sel_title = st.multiselect("Select titles", content.Title)
+    if sel_title:
+        st.write(sel_title[0])
 
 form_setup()
+watchlist()
 #AwesomeTable(sorted)
 
