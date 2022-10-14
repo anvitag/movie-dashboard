@@ -8,7 +8,7 @@ st.markdown("<h1 style='text-align: center; color: #e4e8f3; font-size:55px '>STR
 st.markdown("<p><p>", unsafe_allow_html=True)
 d1,d2,d3 = st.columns((1,4,1))
 d2.image('resources/streaming2.jpg', use_column_width=True, clamp=True)
-CURRENT_THEME = "blue"
+CURRENT_THEME = "pink"
 IS_DARK_THEME = True
 
 def read_data():
