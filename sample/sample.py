@@ -1,3 +1,6 @@
+import csv
+from turtle import onclick
+from requests import session
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -8,7 +11,7 @@ st.markdown("<h1 style='text-align: center; color: #e4e8f3; font-size:55px '>STR
 st.markdown("<p><p>", unsafe_allow_html=True)
 d1,d2,d3 = st.columns((1,4,1))
 d2.image('resources/streaming2.jpg', use_column_width=True, clamp=True)
-CURRENT_THEME = "pink"
+CURRENT_THEME = "red"
 IS_DARK_THEME = True
 
 def read_data():
@@ -82,11 +85,17 @@ def select_genres(content, c):
 def st_dataframe(df):
     st.dataframe(df)
 
+if 'flag' not in st.session_state:
+    st.session_state.flag = False
 
-
+if 'watchlist' not in st.session_state:
+    st.session_state.watchlist = []
 
 content = read_data()
 sorted = sort_popular(content)
+
+if 'df' not in st.session_state:
+    st.session_state.df = sorted
 
 def form_setup():
     form = st.form(key="filters")
@@ -99,8 +108,15 @@ def form_setup():
     sel_genre = c1.selectbox('Select genre', (genres),  key='genre-radio')
     c4, c5,c6 = form.columns((2,2,1))
     state = c5.form_submit_button("Filter")
+    
     search = st.text_input("Search Titles", "")
-
+    def watchlist():
+        titles = form.multiselect("Select Titles for watchlist", st.session_state.df)
+        st.session_state.watchlist.append(titles)
+        submit = form.form_submit_button("Submit!")
+        if submit:
+            st.write("Your list is :", st.session_state.watchlist)
+            #st.session_state.flag=0
     fil1 = content
     if state:
         
@@ -114,17 +130,79 @@ def form_setup():
             fil1 = fil1[fil1.genre.str.contains(sel_genre, case=False)]
 
     if search:
-        fil1 = content[content.Title.str.contains(search, case=False)]  
-    st.dataframe(sort_popular(fil1))
+        fil1 = content[content.Title.str.contains(search, case=False)] 
 
-def watchlist():
-    wtbtn = st.button("Create a watchlist!")
+
+    pop = sort_popular(fil1)
+    st.session_state.df = pop
+    form.write("Create a watchlist :")
     
-    sel_title = st.multiselect("Select titles", content.Title)
-    if sel_title:
-        st.write(sel_title[0])
+    st.dataframe(st.session_state.df)
 
 form_setup()
-watchlist()
+
+def watchlist_form():
+    form2 = st.form(key="watch")
+    
+    def sub():  
+        #st.session_state.listname = "temp"
+        form2.write("Your list is :")
+        df2 = content[content.Title.isin(st.session_state.multiselects)].reset_index()
+        form2.table(df2)
+
+        
+        form2.write("Name your watchlist and save it : ")
+        name = form2.text_input("Name of Watchlist", key="listname")
+
+        def saved():
+            print(st.session_state.listname)
+            df2 = content[content.Title.isin(st.session_state.multiselects)].reset_index()
+            st.session_state.multiselects = []
+
+            df2['Name'] = st.session_state.listname
+            try:
+                csv_file = pd.read_csv('resources/watchlists.csv')
+            except pd.errors.EmptyDataError:
+                csv_file= df2
+
+            else:
+                #df2 = df2.apply(pd.to_numeric, errors='coerce')
+                df2.averageRating = pd.to_numeric(df2.averageRating, errors='coerce')
+                df2.runtimeMinutes = pd.to_numeric(df2.runtimeMinutes, errors='coerce')
+                df2.seasons = pd.to_numeric(df2.seasons, errors='coerce')
+                csv_file = csv_file.append(df2)
+            #form2.write(csv_file)
+            csv_file.to_csv('resources/watchlists.csv', index=False)
+        #print(st.session_state.name_watchlist)
+        
+        save = form2.form_submit_button("Save", on_click=saved)
+
+
+    col= form2.columns((2,1))
+    titles = col[0].multiselect("Select Titles for watchlist", content, key = "multiselects")
+
+    st.session_state.watchlist.append(titles)
+    #st.session_state
+    submit = col[1].form_submit_button("Submit!", on_click=sub)
+
+watchlist_form()
+        
+
+def view_lists():
+    check = st.checkbox("View saved watchlists")
+    if check:
+        try:
+            csv_file = pd.read_csv('resources/watchlists.csv')
+        except pd.errors.EmptyDataError:
+            st.write("No saved lists yet")
+        else:
+            names = csv_file['Name'].unique()
+        for n in names:
+            with st.expander(n):
+                st.write(csv_file[csv_file.Name==n])
+view_lists()
+#watchlist()
 #AwesomeTable(sorted)
 
+
+    

@@ -1,0 +1,5 @@
+index,Title,Type,platform,averageRating,numVotes,description,release_year,genre,age_certification,seasons,titleType,runtimeMinutes,Name
+5,A Perfect Pairing,MOVIE,Netflix,6.1,11767,,2022,"comedy,romance",,,movie,101,kanu
+16,Radhe Shyam,MOVIE,Netflix,5.3,29341,,2022,"drama,romance",,,movie,138,kanu
+7208,Radhe Shyam,MOVIE,amazon prime,5.3,29341,"Vikramaditya, a world-renowned palmist, believes love does not exist in his stars, until he meets Prerana. But when destiny tries to pull them apart, will love prevail?",2022,"romance,drama",,,movie,138,kanu
+56,Thar,MOVIE,Netflix,6.1,5205,,2022,"action,thriller,drama,crime,western",,,movie,108,nnn
