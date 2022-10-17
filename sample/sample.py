@@ -1,5 +1,5 @@
 import csv
-from turtle import onclick
+
 from requests import session
 import streamlit as st
 import pandas as pd
