@@ -12,7 +12,6 @@ st.markdown("<p><p>", unsafe_allow_html=True)
 d1,d2,d3 = st.columns((1,4,1))
 d2.image('resources/streaming2.jpg', use_column_width=True, clamp=True)
 
-IS_DARK_THEME = True
 
 def read_data():
     content = pd.read_csv('sample/all_data.csv')
